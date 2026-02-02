@@ -1,10 +1,11 @@
+'use client';
 
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Trophy, 
-  ChevronRight, 
-  Clock, 
+import {
+  Trophy,
+  ChevronRight,
+  Clock,
   Star,
   Ticket,
   Search,
@@ -16,13 +17,9 @@ import {
   Bell,
   Activity
 } from 'lucide-react';
-import { Language } from '../types';
-import { translations } from '../translations';
-import { LOGO_WHITE_URL } from '../App';
-
-interface PlayerSystemProps {
-  lang: Language;
-}
+import { useApp } from '@/context/AppContext';
+import { translations } from '@/translations';
+import { LOGO_WHITE_URL } from '@/lib/brand';
 
 const THEME_COLOR = '#261a15'; // Deep Warm Dark Brown (Casino Lounge feel)
 const ACCENT_COLOR = '#FDEB7D'; // Refined Golden Yellow for high visibility and premium feel
@@ -141,7 +138,8 @@ const ModuleUIMockup: React.FC<{ type: number }> = ({ type }) => {
   );
 };
 
-export const PlayerSystem: React.FC<PlayerSystemProps> = ({ lang }) => {
+export const PlayerSystem: React.FC = () => {
+  const { lang } = useApp();
   const t = translations[lang].player;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [activeModule, setActiveModule] = useState(0);

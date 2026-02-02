@@ -18,8 +18,8 @@ import {
   Plus,
   Minus
 } from 'lucide-react';
-import { Language } from '../types';
-import { translations } from '../translations';
+import { Language } from '@/types';
+import { translations } from '@/translations';
 
 interface AssociationSystemProps {
   lang: Language;

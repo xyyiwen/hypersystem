@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-jetbrains-mono: 'JetBrains Mono', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-inter);
+}
+
+.font-mono {
+  font-family: var(--font-jetbrains-mono);
+}
+
+::selection {
+  background-color: #7df90b;
+  color: #050817;
+}

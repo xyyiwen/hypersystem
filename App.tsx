@@ -1,50 +1,28 @@
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ChevronRight, 
-  BarChart3, 
-  Users, 
-  LayoutDashboard, 
-  Zap, 
-  ShieldCheck, 
-  TrendingUp, 
-  Smartphone, 
-  Clock, 
+import {
+  ChevronRight,
+  BarChart3,
+  LayoutDashboard,
+  ShieldCheck,
+  TrendingUp,
+  Smartphone,
+  Clock,
   ShieldAlert,
-  X,
   CheckCircle2,
   ArrowRight,
-  Activity,
-  Layers,
-  Menu,
-  Globe,
-  PartyPopper,
-  Search,
-  History,
-  Ticket,
-  Bell
 } from 'lucide-react';
-import { getModules, getPainPoints, CARD_SUITS } from './constants';
-import { CalculationResults, Language, View } from './types';
-import { translations } from './translations';
-import { PlayerSystem } from './components/PlayerSystem';
-import { ClubSystem } from './components/ClubSystem';
-import { PricingPage } from './components/PricingPage';
+import { getModules, getPainPoints, CARD_SUITS } from '@/constants';
+import { CalculationResults, Language } from '@/types';
+import { translations } from '@/translations';
+import { LOGO_URL, HERO_SHOWCASE_URL, BRAND_GREEN } from '@/lib/brand';
 
-// Official Brand Logo URL (Black Text)
-export const LOGO_URL = "https://lh3.googleusercontent.com/d/1eGN1gQqIKeRq5FA-yLxQOqGcV1AaqP4Z";
-// White Text Version (Green icon + White text)
-export const LOGO_WHITE_URL = "https://lh3.googleusercontent.com/d/1jApTkIhlJXq9w-johvc8CdPaYKTnj4F3";
+// --- Shared Components (used by LandingView) ---
 
-// Hero Product Showcase Image - Updated to new link provided
-export const HERO_SHOWCASE_URL = "https://lh3.googleusercontent.com/d/1PYAIPuGV8VyctmdThQyqmuCCp1a0Jghn";
-
-const BRAND_GREEN = '#7DF90B';
-
-// --- Shared Components ---
-
-const CardSuitWatermark: React.FC<{ className?: string }> = ({ className }) => (
+export const CardSuitWatermark: React.FC<{ className?: string }> = ({ className }) => (
   <div className={`absolute pointer-events-none opacity-[0.04] select-none ${className}`}>
     <div className="flex gap-12 text-6xl">
       {CARD_SUITS.map(suit => <span key={suit}>{suit}</span>)}
@@ -52,7 +30,7 @@ const CardSuitWatermark: React.FC<{ className?: string }> = ({ className }) => (
   </div>
 );
 
-const SectionTitle: React.FC<{ tag?: string; title: string; subtitle?: string }> = ({ tag, title, subtitle }) => (
+export const SectionTitle: React.FC<{ tag?: string; title: string; subtitle?: string }> = ({ tag, title, subtitle }) => (
   <div className="mb-16 text-center">
     {tag && <span className="text-blue-600 font-black text-base tracking-[0.4em] uppercase mb-4 block">{tag}</span>}
     <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 leading-tight tracking-tighter">{title}</h2>
@@ -60,138 +38,9 @@ const SectionTitle: React.FC<{ tag?: string; title: string; subtitle?: string }>
   </div>
 );
 
-// --- Navigation ---
-
-const Navbar: React.FC<{ 
-  onOpenTrial: () => void; 
-  lang: Language; 
-  setLang: (l: Language) => void;
-  currentView: View;
-  onSetView: (v: View) => void;
-}> = ({ onOpenTrial, lang, setLang, currentView, onSetView }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
-  const t = translations[lang].nav;
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const languages: { code: Language; label: string }[] = [
-    { code: 'zh-TW', label: '繁體中文' },
-    { code: 'zh-CN', label: '简体中文' },
-    { code: 'en', label: 'English' },
-    { code: 'ja', label: '日本語' }
-  ];
-
-  // Identifies if we are on the ClubSystem or PlayerSystem page and at the top (transparent navbar state)
-  const isDarkHero = !isScrolled && (currentView === 'club' || currentView === 'player');
-
-  const NavItem = ({ view, label }: { view: View; label: string }) => {
-    const isActive = currentView === view;
-    
-    // Default (Scrolled or Light Hero) styles
-    let activeClasses = 'bg-slate-900 text-white shadow-lg';
-    let inactiveClasses = 'text-slate-600 hover:text-blue-600 hover:bg-brand-green/10';
-
-    // Overriding for Dark Hero (Club or Player page at top)
-    if (isDarkHero) {
-      activeClasses = 'bg-white text-slate-950 shadow-2xl';
-      inactiveClasses = 'text-white/70 hover:text-white hover:bg-white/10';
-    }
-
-    return (
-      <button 
-        onClick={() => onSetView(view)} 
-        className={`text-base font-bold px-5 py-2.5 rounded-xl transition-all whitespace-nowrap ${
-          isActive ? activeClasses : inactiveClasses
-        }`}
-      >
-        {label}
-      </button>
-    );
-  };
-
-  return (
-    <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 px-8 md:px-16 lg:px-24 ${
-      isScrolled 
-        ? 'bg-white/80 backdrop-blur-xl border-b border-slate-100 py-4 shadow-sm' 
-        : 'bg-transparent py-8'
-    }`}>
-      <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-        <button onClick={() => onSetView('landing')} className="group flex items-center">
-          {/* Logo - Single PNG with dynamic source switching based on background darkness */}
-          <img 
-            src={isDarkHero ? LOGO_WHITE_URL : LOGO_URL} 
-            alt="HyperSystem Logo" 
-            className="h-10 md:h-12 w-auto transition-all duration-500 group-hover:scale-105" 
-          />
-        </button>
-        
-        <div className="hidden md:flex items-center gap-0">
-          <div className="flex items-center">
-            <NavItem view="landing" label={t.product} />
-            <NavItem view="club" label={t.clubSystem} />
-            <NavItem view="player" label={t.playerSystem} />
-            <NavItem view="pricing" label={t.pricing} />
-          </div>
-          
-          <div className={`w-px h-6 mx-4 transition-colors duration-500 ${isDarkHero ? 'bg-white/20' : 'bg-slate-200'}`} />
-
-          <div className="relative">
-            <button 
-              onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-              className={`flex items-center gap-2 text-base font-bold transition-all duration-500 px-4 py-2 ${
-                isDarkHero ? 'text-white/80 hover:text-white' : 'text-slate-600 hover:text-blue-600'
-              }`}
-            >
-              <Globe size={18} />
-              {languages.find(l => l.code === lang)?.label}
-            </button>
-            <AnimatePresence>
-              {isLangMenuOpen && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="absolute top-full right-0 mt-4 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl py-2 overflow-hidden"
-                >
-                  {languages.map(l => (
-                    <button 
-                      key={l.code}
-                      onClick={() => { setLang(l.code); setIsLangMenuOpen(false); }}
-                      className={`w-full text-left px-5 py-3 text-base font-bold transition-colors ${lang === l.code ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50'}`}
-                    >
-                      {l.label}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <button 
-            onClick={onOpenTrial} 
-            style={{ backgroundColor: BRAND_GREEN }}
-            className={`text-slate-950 px-8 py-3 rounded-xl text-base font-black tracking-tight transition-all shadow-xl ml-4 ${
-              isDarkHero ? 'hover:bg-white hover:text-slate-950' : 'hover:bg-slate-900 hover:text-white shadow-brand'
-            }`}
-          >
-            {t.trial}
-          </button>
-        </div>
-
-        <button className={`md:hidden p-2 transition-colors duration-500 ${isDarkHero ? 'text-white' : 'text-slate-900'}`}><Menu /></button>
-      </div>
-    </nav>
-  );
-};
-
 // --- Hero Section ---
 
-const Hero: React.FC<{ onSetView: (v: View) => void; lang: Language }> = ({ onSetView, lang }) => {
+export const Hero: React.FC<{ lang: Language }> = ({ lang }) => {
   const t = translations[lang].hero;
   return (
     <section className="relative pt-40 pb-20 px-8 md:px-16 lg:px-24 overflow-hidden min-h-[70vh] flex items-center bg-slate-50">
@@ -229,28 +78,30 @@ const Hero: React.FC<{ onSetView: (v: View) => void; lang: Language }> = ({ onSe
             </p>
 
             <div className="grid sm:grid-cols-2 gap-5 mt-16">
-              <motion.div 
-                whileHover={{ y: -8 }} 
-                onClick={() => onSetView('club')} 
-                className="bg-slate-900 border border-slate-800 p-8 rounded-[2rem] transition-all cursor-pointer shadow-xl hover:shadow-2xl hover:shadow-slate-900/30 group"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div style={{ backgroundColor: BRAND_GREEN }} className="w-10 h-10 text-slate-950 rounded-xl flex items-center justify-center group-hover:bg-white group-hover:scale-110 transition-all shadow-sm"><LayoutDashboard size={20} /></div>
-                  <h3 className="text-white font-black text-xl tracking-tight">{t.card1Title}</h3>
-                </div>
-                <p className="text-base text-slate-400 font-bold leading-relaxed">{t.card1Desc}</p>
-              </motion.div>
-              <motion.div 
-                whileHover={{ y: -8 }} 
-                onClick={() => onSetView('player')} 
-                className="bg-white border border-slate-100 p-8 rounded-[2rem] transition-all cursor-pointer shadow-sm hover:shadow-2xl hover:shadow-slate-200 group"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center group-hover:bg-brand-green group-hover:text-slate-950 group-hover:scale-110 transition-all shadow-sm"><Smartphone size={20} /></div>
-                  <h3 className="text-slate-900 font-black text-xl tracking-tight">{t.card2Title}</h3>
-                </div>
-                <p className="text-base text-slate-500 font-bold leading-relaxed">{t.card2Desc}</p>
-              </motion.div>
+              <Link href="/club">
+                <motion.div 
+                  whileHover={{ y: -8 }} 
+                  className="bg-slate-900 border border-slate-800 p-8 rounded-[2rem] transition-all cursor-pointer shadow-xl hover:shadow-2xl hover:shadow-slate-900/30 group"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div style={{ backgroundColor: BRAND_GREEN }} className="w-10 h-10 text-slate-950 rounded-xl flex items-center justify-center group-hover:bg-white group-hover:scale-110 transition-all shadow-sm"><LayoutDashboard size={20} /></div>
+                    <h3 className="text-white font-black text-xl tracking-tight">{t.card1Title}</h3>
+                  </div>
+                  <p className="text-base text-slate-400 font-bold leading-relaxed">{t.card1Desc}</p>
+                </motion.div>
+              </Link>
+              <Link href="/player">
+                <motion.div 
+                  whileHover={{ y: -8 }} 
+                  className="bg-white border border-slate-100 p-8 rounded-[2rem] transition-all cursor-pointer shadow-sm hover:shadow-2xl hover:shadow-slate-200 group"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center group-hover:bg-brand-green group-hover:text-slate-950 group-hover:scale-110 transition-all shadow-sm"><Smartphone size={20} /></div>
+                    <h3 className="text-slate-900 font-black text-xl tracking-tight">{t.card2Title}</h3>
+                  </div>
+                  <p className="text-base text-slate-500 font-bold leading-relaxed">{t.card2Desc}</p>
+                </motion.div>
+              </Link>
             </div>
           </motion.div>
 
@@ -278,90 +129,7 @@ const Hero: React.FC<{ onSetView: (v: View) => void; lang: Language }> = ({ onSe
   );
 };
 
-/**
- * Main App component
- * Manages core state for navigation and language, and handles view routing.
- */
-const App: React.FC = () => {
-  const [lang, setLang] = useState<Language>('zh-TW');
-  const [view, setView] = useState<View>('landing');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
-
-  // Auto scroll to top on view change
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [view]);
-
-  return (
-    <div className="min-h-screen bg-white font-sans antialiased selection:bg-brand-green selection:text-brand-dark">
-      <Navbar 
-        onOpenTrial={() => setIsModalOpen(true)} 
-        lang={lang} 
-        setLang={setLang} 
-        currentView={view} 
-        onSetView={setView} 
-      />
-      
-      <main>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={view + lang}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            {view === 'landing' && (
-              <>
-                <Hero onSetView={setView} lang={lang} />
-                <ProductPreview activeTab={activeTab} setActiveTab={setActiveTab} lang={lang} />
-                <Calculator lang={lang} />
-                <Contact onOpenModal={() => setIsModalOpen(true)} lang={lang} />
-              </>
-            )}
-            {view === 'player' && <PlayerSystem lang={lang} />}
-            {view === 'club' && <ClubSystem lang={lang} />}
-            {view === 'pricing' && (
-              <PricingPage 
-                lang={lang} 
-                onOpenModal={() => setIsModalOpen(true)} 
-                onOpenSubscription={() => setIsModalOpen(true)} 
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </main>
-
-      <DemoModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        lang={lang} 
-      />
-      
-      {/* Footer */}
-      <footer className="py-20 px-8 md:px-16 lg:px-24 bg-white border-t border-slate-100">
-        <div className="max-w-[1440px] mx-auto px-8 md:px-16 lg:px-24 flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="flex items-center gap-4">
-            <img 
-              src={LOGO_URL} 
-              alt="HyperSystem Logo" 
-              className="h-10 md:h-12 w-auto transition-all" 
-            />
-            <span className="font-black text-slate-400 uppercase tracking-widest text-sm">© 2026 HYPER TECH GROUP</span>
-          </div>
-          <div className="flex gap-10 text-slate-300">
-             <button className="hover:text-blue-600 transition-colors"><Globe size={20} /></button>
-             <button className="hover:text-blue-600 transition-colors"><Users size={20} /></button>
-             <button className="hover:text-blue-600 transition-colors"><Zap size={20} /></button>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
-
-const ProductPreview: React.FC<{ activeTab: number; setActiveTab: (id: number) => void; lang: Language }> = ({ activeTab, setActiveTab, lang }) => {
+export const ProductPreview: React.FC<{ activeTab: number; setActiveTab: (id: number) => void; lang: Language }> = ({ activeTab, setActiveTab, lang }) => {
   const t = translations[lang].product;
   const modules = getModules(lang);
   const demoAreaRef = useRef<HTMLDivElement>(null);
@@ -448,7 +216,7 @@ const ProductPreview: React.FC<{ activeTab: number; setActiveTab: (id: number) =
   );
 };
 
-const Calculator: React.FC<{ lang: Language }> = ({ lang }) => {
+export const Calculator: React.FC<{ lang: Language; onOpenTrial: () => void }> = ({ lang, onOpenTrial }) => {
   const [step, setStep] = useState<'input' | 'calculating' | 'result'>('input');
   const t = translations[lang].calculator;
   const hc = translations[lang].healthCheck;
@@ -456,7 +224,6 @@ const Calculator: React.FC<{ lang: Language }> = ({ lang }) => {
   const [painPoints, setPainPoints] = useState<boolean[]>(new Array(currentPoints.length).fill(false));
   const [inputs, setInputs] = useState({ tournaments: 4, players: 80, hourlyWage: 180 });
   const [results, setResults] = useState<CalculationResults | null>(null);
-  const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
 
   const calculateResults = () => {
     setStep('calculating');
@@ -667,7 +434,7 @@ const Calculator: React.FC<{ lang: Language }> = ({ lang }) => {
                       {t.btnRetry}
                     </button>
                     <button 
-                      onClick={() => setIsTrialModalOpen(true)} 
+                      onClick={onOpenTrial} 
                       className="flex-1 md:w-48 h-16 bg-slate-950 text-white rounded-xl font-black text-xl transition-all active:scale-95 flex items-center justify-center gap-2 hover:bg-blue-600 hover:text-white whitespace-nowrap px-4"
                     >
                       {t.btnApply} <ArrowRight size={20}/>
@@ -683,13 +450,12 @@ const Calculator: React.FC<{ lang: Language }> = ({ lang }) => {
             </motion.div>
           )}
         </div>
-        <DemoModal isOpen={isTrialModalOpen} onClose={() => setIsTrialModalOpen(false)} lang={lang} />
       </div>
     </section>
   );
 };
 
-const Contact: React.FC<{ onOpenModal: () => void; lang: Language }> = ({ onOpenModal, lang }) => {
+export const Contact: React.FC<{ onOpenModal: () => void; lang: Language }> = ({ onOpenModal, lang }) => {
   const t = translations[lang].contact;
   return (
     <section className="py-32 px-8 md:px-16 lg:px-24 relative bg-white">
@@ -735,93 +501,3 @@ const Contact: React.FC<{ onOpenModal: () => void; lang: Language }> = ({ onOpen
   );
 };
 
-const DemoModal: React.FC<{ 
-  isOpen: boolean; 
-  onClose: () => void; 
-  lang: Language; 
-  mode?: 'trial' | 'subscription'; 
-  planName?: string 
-}> = ({ isOpen, onClose, lang, mode = 'trial', planName }) => {
-  const t = translations[lang].modal;
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  useEffect(() => { if (!isOpen) { setTimeout(() => setIsSubmitted(false), 500); } }, [isOpen]);
-  if (!isOpen) return null;
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); setIsSubmitted(true); };
-  const isSubscription = mode === 'subscription';
-  const title = isSubscription ? t.titleSubscription.replace('{plan}', planName || '') : t.title;
-  const desc = isSubscription ? t.descSubscription : t.desc;
-  const buttonText = isSubscription ? t.btnSubscribe : t.btnSubmit;
-  return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-6">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={onClose} className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" />
-      <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} className="relative bg-white w-full max-w-2xl rounded-[3rem] shadow-3xl overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col">
-        <AnimatePresence mode="wait">
-          {!isSubmitted ? (
-            <motion.div key="form-view" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="flex flex-col h-full overflow-hidden" >
-              <div className="bg-slate-50 p-6 md:p-10 border-b border-slate-100 flex justify-between items-start shrink-0">
-                 <div className="space-y-2">
-                   <h3 className="text-2xl md:text-3xl font-black tracking-tighter text-slate-900 leading-tight">{title}</h3>
-                   <p className="text-slate-500 font-medium text-base leading-relaxed">{desc}</p>
-                 </div>
-                 <button onClick={onClose} className="p-3 hover:bg-slate-200 transition-colors rounded-2xl text-slate-400 shrink-0 ml-4"><X /></button>
-              </div>
-              <form className="p-6 md:p-10 space-y-8 overflow-y-auto" onSubmit={handleSubmit}>
-                 <div className="grid sm:grid-cols-2 gap-8">
-                    <div className="space-y-3">
-                       <label className="text-sm font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.labelBrand}</label>
-                       <input type="text" placeholder={t.placeholderBrand} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold text-slate-900 text-lg focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all" required />
-                    </div>
-                    {isSubscription && (
-                      <div className="space-y-3">
-                         <label className="text-sm font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.labelTaxId}</label>
-                         <input type="text" placeholder={t.placeholderTaxId} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold text-slate-900 text-lg focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all" required />
-                      </div>
-                    )}
-                    <div className="space-y-3">
-                       <label className="text-sm font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.labelContact}</label>
-                       <input type="text" placeholder={t.placeholderContact} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold text-slate-900 text-lg focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all" required />
-                    </div>
-                    <div className="space-y-3">
-                       <label className="text-sm font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.labelEmail}</label>
-                       <input type="email" placeholder={t.placeholderEmail} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold text-slate-900 text-lg focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all" />
-                    </div>
-                    <div className="space-y-3">
-                       <label className="text-sm font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.labelPhone}</label>
-                       <input type="tel" placeholder={t.placeholderPhone} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold text-slate-900 text-lg focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all" required />
-                    </div>
-                    <div className="space-y-3">
-                       <label className="text-sm font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.labelAddress}</label>
-                       <input type="text" placeholder={t.placeholderAddress} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold text-slate-900 text-lg focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all" required />
-                    </div>
-                 </div>
-                 <button type="submit" className="w-full bg-slate-900 text-white py-5 rounded-[1.5rem] font-black text-xl shadow-xl shadow-slate-200 hover:bg-blue-600 transition-all">
-                   {buttonText}
-                 </button>
-              </form>
-            </motion.div>
-          ) : (
-            <motion.div key="success-view" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center p-12 md:p-16 text-center space-y-8" >
-               <div style={{ backgroundColor: BRAND_GREEN }} className="w-24 h-24 rounded-[2.5rem] flex items-center justify-center text-slate-950 shadow-2xl shadow-emerald-500/20 animate-bounce">
-                  <PartyPopper size={48} />
-               </div>
-               <div className="space-y-4">
-                  <h3 className="text-4xl font-black text-slate-900 tracking-tighter">Thank You!</h3>
-                  <p className="text-slate-500 font-bold text-2xl leading-relaxed max-w-md mx-auto">
-                    {lang === 'zh-TW' ? '謝謝您提交申請，HyperSystem 團隊將會聯絡您並協助您啟用服務' : 
-                     lang === 'zh-CN' ? '谢谢您提交申请，HyperSystem 团队将会联络您并協助您启用服务' :
-                     lang === 'ja' ? 'お申し込みありがとうございます。HyperSystemチームよりご連絡し、サービスの有効化をサポートいたします。' :
-                     'Thank you for submitting your application. The HyperSystem team will contact you soon to help activate your service.'}
-                  </p>
-               </div>
-               <button onClick={onClose} className="bg-slate-900 text-white px-10 py-4 rounded-2xl font-black tracking-tight hover:bg-emerald-400 transition-all shadow-xl text-lg" >
-                 {lang.startsWith('zh') ? '返回首頁' : lang === 'ja' ? 'ホームに戻る' : 'Back to Home'}
-               </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-    </div>
-  );
-};
-
-export default App;

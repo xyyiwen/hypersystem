@@ -1,15 +1,10 @@
+'use client';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, Info, ChevronDown, ChevronUp, ArrowRight, Zap, ShieldCheck, TrendingUp, Users } from 'lucide-react';
-import { Language } from '../types';
-import { translations } from '../translations';
-
-interface PricingPageProps {
-  lang: Language;
-  onOpenModal: () => void;
-  onOpenSubscription: (planName: string) => void;
-}
+import { useApp } from '@/context/AppContext';
+import { translations } from '@/translations';
 
 const BRAND_GREEN = '#7DF90B';
 
@@ -27,7 +22,8 @@ const PremiumSpade = ({ size = 300, className = "" }) => (
   </svg>
 );
 
-export const PricingPage: React.FC<PricingPageProps> = ({ lang, onOpenModal, onOpenSubscription }) => {
+export const PricingPage: React.FC = () => {
+  const { lang, openTrial } = useApp();
   const [isAnnual, setIsAnnual] = useState(true);
   const [showTable, setShowTable] = useState(false);
   const t = translations[lang].pricing;
@@ -232,7 +228,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ lang, onOpenModal, onO
 
                 <div className="mt-auto flex flex-col items-center">
                   <button 
-                    onClick={() => isFree ? onOpenModal() : onOpenSubscription(planData.name)}
+                    onClick={() => openTrial()}
                     className={`w-full py-4 rounded-xl font-black text-lg uppercase tracking-widest transition-all ${
                       p.isPopular 
                         ? 'bg-blue-600 text-white hover:bg-slate-900 shadow-lg shadow-blue-600/30' 

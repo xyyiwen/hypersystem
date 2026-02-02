@@ -1,19 +1,20 @@
+'use client';
 
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Users, 
-  ChevronRight, 
-  CheckCircle2, 
-  Activity, 
-  LayoutDashboard, 
-  Play, 
-  Zap, 
-  BarChart3, 
-  ShieldCheck, 
-  Search, 
-  History, 
-  Ticket, 
+import {
+  Users,
+  ChevronRight,
+  CheckCircle2,
+  Activity,
+  LayoutDashboard,
+  Play,
+  Zap,
+  BarChart3,
+  ShieldCheck,
+  Search,
+  History,
+  Ticket,
   Bell,
   Plus,
   Minus,
@@ -28,13 +29,9 @@ import {
   Diamond,
   Spade
 } from 'lucide-react';
-import { Language } from '../types';
-import { translations } from '../translations';
-import { LOGO_URL } from '../App';
-
-interface ClubSystemProps {
-  lang: Language;
-}
+import { useApp } from '@/context/AppContext';
+import { translations } from '@/translations';
+import { LOGO_URL } from '@/lib/brand';
 
 const THEME_COLOR = '#05070a'; // Darker, more premium base
 const BRAND_GREEN = '#7DF90B'; 
@@ -184,7 +181,8 @@ const ModuleUIMockup: React.FC<{ type: number }> = ({ type }) => {
   );
 };
 
-export const ClubSystem: React.FC<ClubSystemProps> = ({ lang }) => {
+export const ClubSystem: React.FC = () => {
+  const { lang } = useApp();
   const t = translations[lang].club;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [activeModule, setActiveModule] = useState(0);
