@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Noto_Sans_TC, JetBrains_Mono } from 'next/font/google';
 import { SiteLayout } from '@/components/SiteLayout';
 import './globals.css';
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
+const notoSansTC = Noto_Sans_TC({
+  subsets: ['latin', 'latin-ext'],
+  variable: '--font-noto-sans-tc',
   display: 'swap',
+  weight: ['400', '500', '700'],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -30,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-TW" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="zh-TW" className={`${notoSansTC.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen bg-white font-sans antialiased">
         <SiteLayout>{children}</SiteLayout>
       </body>

@@ -32,7 +32,7 @@ export const CardSuitWatermark: React.FC<{ className?: string }> = ({ className 
 
 export const SectionTitle: React.FC<{ tag?: string; title: string; subtitle?: string }> = ({ tag, title, subtitle }) => (
   <div className="mb-16 text-center">
-    {tag && <span className="text-blue-600 font-black text-base tracking-[0.4em] uppercase mb-4 block">{tag}</span>}
+    {tag && <span className="text-primary-foreground font-medium text-base tracking-[0.2em] uppercase mb-4 block">{tag}</span>}
     <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 leading-tight tracking-tighter">{title}</h2>
     {subtitle && <p className="text-slate-500 max-w-4xl mx-auto font-medium text-xl leading-relaxed whitespace-pre-line">{subtitle}</p>}
   </div>
@@ -63,43 +63,40 @@ export const Hero: React.FC<{ lang: Language }> = ({ lang }) => {
               initial={{ opacity: 0, y: 10 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.2 }} 
-              className="inline-block px-6 py-2 rounded-full bg-blue-600 text-white text-sm font-black tracking-[0.4em] mb-8 border border-blue-600/20 uppercase shadow-lg shadow-blue-600/20"
-            >
+              className="inline-block px-3 py-1 text-primary-foreground rounded-full bg-primary font-medium mb-4 tracking-[0.1em] uppercase shadow-lg">
               {t.tag}
             </motion.div>
 
-            <h1 className="text-5xl md:text-7xl font-black text-slate-900 mb-10 leading-[1.05] tracking-tighter">
+            <h1 className="text-5xl md:text-6xl font-black text-slate-900 mb-10 leading-[1.5] tracking-normal">
               {t.title1}<br />
-              <span className="text-blue-600 drop-shadow-[0_2px_10px_rgba(79,144,19,0.3)]">{t.title2}</span>
+              <span className="text-primary leading-[1.5] drop-shadow-[0_2px_10px_rgba(79,144,19,0.3)]">{t.title2}</span>
             </h1>
             
-            <p className="text-slate-500 text-2xl font-medium mb-12 max-w-lg leading-relaxed">
+            <p className="text-slate-500 text-lg font-medium mb-10 max-w-lg leading-relaxed">
               {t.desc}
-            </p>
+            </p>  
 
-            <div className="grid sm:grid-cols-2 gap-5 mt-16">
+            <div className="grid sm:grid-cols-2 gap-5">
               <Link href="/club">
                 <motion.div 
                   whileHover={{ y: -8 }} 
-                  className="bg-slate-900 border border-slate-800 p-8 rounded-[2rem] transition-all cursor-pointer shadow-xl hover:shadow-2xl hover:shadow-slate-900/30 group"
-                >
-                  <div className="flex items-center gap-3 mb-4">
-                    <div style={{ backgroundColor: BRAND_GREEN }} className="w-10 h-10 text-slate-950 rounded-xl flex items-center justify-center group-hover:bg-white group-hover:scale-110 transition-all shadow-sm"><LayoutDashboard size={20} /></div>
-                    <h3 className="text-white font-black text-xl tracking-tight">{t.card1Title}</h3>
+                  className="bg-background border p-4 rounded-[1.5rem] transition-all cursor-pointer shadow-xl hover:shadow-2xl hover:shadow-slate-900/30 group">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="bg-primary w-8 h-8 text-white rounded-[0.5rem] flex items-center justify-center "><LayoutDashboard size={20} /></div>
+                    <h3 className="text-background-foregorund font-medium text-lg tracking-normal">{t.card1Title}</h3>
                   </div>
-                  <p className="text-base text-slate-400 font-bold leading-relaxed">{t.card1Desc}</p>
+                  <p className="text-base text-slate-600 font-medium leading-relaxed">{t.card1Desc}</p>
                 </motion.div>
               </Link>
               <Link href="/player">
                 <motion.div 
                   whileHover={{ y: -8 }} 
-                  className="bg-white border border-slate-100 p-8 rounded-[2rem] transition-all cursor-pointer shadow-sm hover:shadow-2xl hover:shadow-slate-200 group"
-                >
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center group-hover:bg-brand-green group-hover:text-slate-950 group-hover:scale-110 transition-all shadow-sm"><Smartphone size={20} /></div>
-                    <h3 className="text-slate-900 font-black text-xl tracking-tight">{t.card2Title}</h3>
+                  className="bg-background border p-4 rounded-[1.5rem] transition-all cursor-pointer shadow-xl hover:shadow-2xl hover:shadow-slate-900/30 group">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="bg-primary w-8 h-8 text-white rounded-[0.5rem] flex items-center justify-center "><Smartphone size={20} /></div>
+                    <h3 className="text-background-foregorund font-medium text-lg tracking-normal">{t.card2Title}</h3>
                   </div>
-                  <p className="text-base text-slate-500 font-bold leading-relaxed">{t.card2Desc}</p>
+                  <p className="text-base text-slate-600 font-medium leading-relaxed">{t.card2Desc}</p>
                 </motion.div>
               </Link>
             </div>
@@ -111,14 +108,16 @@ export const Hero: React.FC<{ lang: Language }> = ({ lang }) => {
             transition={{ duration: 1, delay: 0.2 }} 
             className="relative hidden lg:block"
           >
+
             <div className="relative flex items-center justify-center">
-               <img 
+                <img 
                  src={HERO_SHOWCASE_URL} 
                  alt="HyperSystem Brand Experience" 
                  style={{ imageRendering: 'auto' }}
                  /* Removed max-w-full to let it expand more freely in the larger column */
                  className="w-full h-auto drop-shadow-[0_25px_70px_rgba(0,0,0,0.15)] object-contain transition-opacity duration-700"
                />
+
             </div>
             <div style={{ backgroundColor: BRAND_GREEN }} className="absolute -top-10 -right-10 w-40 h-40 rounded-full blur-[80px] opacity-20" />
             <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-blue-400 rounded-full blur-[100px] opacity-20" />
@@ -153,33 +152,34 @@ export const ProductPreview: React.FC<{ activeTab: number; setActiveTab: (id: nu
     <section id="product" className="py-32 px-8 md:px-16 lg:px-24 bg-white relative">
       <div className="max-w-[1440px] mx-auto">
         <SectionTitle tag={t.tag} title={t.title} subtitle={t.subtitle} />
-        <div className="flex flex-col lg:flex-row gap-12 mt-20 items-center">
+        <div className="flex flex-col lg:flex-row gap-10 mt-20 items-center">
           <div className="w-full lg:w-[35%] flex flex-col gap-4">
             {modules.map((mod, idx) => (
               <button 
                 key={mod.id} 
                 onClick={() => handleTabClick(idx)} 
-                className={`w-full p-8 rounded-[2.5rem] transition-all text-left border relative overflow-hidden group ${
+                className={`w-full p-4 rounded-[1.5rem] transition-all text-left border relative overflow-hidden group ${
                   activeTab === idx 
-                    ? 'bg-slate-900 border-slate-900 shadow-2xl shadow-slate-900/30' 
-                    : 'bg-slate-50 border-slate-100 text-slate-900 hover:border-slate-200'
+                    ? 'bg-backgorund border shadow-2xl shadow-md' 
+                    : 'bg-accent border text-slate-900 hover:border-slate-200'
                 }`}
               >
-                <div className="flex items-start gap-6">
+                <div className="flex items-start gap-4">
                   <div 
-                    style={{ backgroundColor: activeTab === idx ? BRAND_GREEN : 'white' }}
-                    className={`shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
-                      activeTab === idx ? 'text-slate-950' : 'text-blue-600 shadow-sm'
+                    className={`shrink-0 w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
+                      activeTab === idx 
+                      ? 'bg-primary text-white' 
+                      : 'bg-white text-slate-600 shadow-sm'
                     }`}
                   >
                     {mod.icon}
                   </div>
                   <div className="space-y-1">
-                    <h3 className={`font-black text-xl transition-colors ${activeTab === idx ? 'text-white' : 'text-slate-900'}`}>{mod.name}</h3>
-                    <p className={`text-base font-bold leading-relaxed transition-colors ${activeTab === idx ? 'text-white/80' : 'text-slate-500'}`}>{mod.desc}</p>
+                    <h3 className={`font-black text-xl transition-colors ${activeTab === idx ? 'text-slate-900' : 'text-slate-600'}`}>{mod.name}</h3>
+                    <p className={`text-base font-bold leading-relaxed transition-colors ${activeTab === idx ? 'text-slate-500' : 'text-slate-500'}`}>{mod.desc}</p>
                     <div className="flex flex-wrap gap-2 pt-4">
                       {mod.highlights.map((tag, tIdx) => (
-                        <span key={tIdx} className={`text-sm px-3 py-1.5 rounded-lg font-black uppercase tracking-wider transition-all ${activeTab === idx ? 'bg-slate-800 text-white border border-slate-700' : 'bg-blue-100 text-blue-700'}`}>{tag}</span>
+                        <span key={tIdx} className={`text-sm px-3 py-1.5 rounded-lg font-black uppercase tracking-wider transition-all ${activeTab === idx ? 'bg-primary text-white' : 'bg-chart-3 border text-slate-700'}`}>{tag}</span>
                       ))}
                     </div>
                   </div>

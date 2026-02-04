@@ -56,7 +56,7 @@ export function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-0">
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             {ROUTES.map(({ path, labelKey }) => {
               const isActive = pathname === path;
               let activeClasses = 'bg-slate-900 text-white shadow-lg';
@@ -80,7 +80,7 @@ export function Navbar() {
           </div>
 
           <div
-            className={`w-px h-6 mx-4 transition-colors duration-500 ${
+            className={`w-0.5 h-6 mx-2 transition-colors duration-500 ${
               isDarkHero ? 'bg-white/20' : 'bg-slate-200'
             }`}
           />

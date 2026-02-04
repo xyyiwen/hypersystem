@@ -1,40 +1,107 @@
-import type { Config } from 'tailwindcss';
+import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: ["class"],
   content: [
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './lib/**/*.{js,ts,jsx,tsx,mdx}',
-    './*.{js,ts,jsx,tsx,mdx}',
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./lib/**/*.{js,ts,jsx,tsx,mdx}",
+    "./*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+
+        primary: {
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
+        },
+
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
+        },
+
+        chart: {
+          1: "hsl(var(--chart-1))",
+          2: "hsl(var(--chart-2))",
+          3: "hsl(var(--chart-3))",
+          4: "hsl(var(--chart-4))",
+          5: "hsl(var(--chart-5))",
+        },
+
+        // 保留你原本的品牌色（可選）
         brand: {
-          green: '#7DF90B',
-          dark: '#050817',
-        },
-        blue: {
-          50: '#f4f9f0',
-          100: '#e5f1dc',
-          200: '#cee4ba',
-          300: '#a9cd8b',
-          400: '#7eb05b',
-          500: '#5e953a',
-          600: '#4F9013',
-          700: '#3c6f12',
-          800: '#335914',
-          900: '#2c4b15',
-          950: '#152907',
+          green: "#7DF90B",
+          dark: "#050817",
         },
       },
+
+      borderRadius: {
+        lg: "var(--radius-lg)",
+        md: "var(--radius-md)",
+        sm: "var(--radius-sm)",
+        xl: "var(--radius-xl)",
+        DEFAULT: "var(--radius)",
+      },
+
       boxShadow: {
-        brand: '0 0 20px rgba(125, 249, 11, 0.15)',
-        'brand-lg': '0 0 35px rgba(125, 249, 11, 0.25)',
+        sm: "var(--shadow-sm)",
+        DEFAULT: "var(--shadow)",
+        md: "var(--shadow-md)",
+        lg: "var(--shadow-lg)",
+        xl: "var(--shadow-xl)",
+        "2xl": "var(--shadow-2xl)",
       },
+
       fontFamily: {
-        sans: ['var(--font-inter)', 'Inter', 'sans-serif'],
-        mono: ['var(--font-jetbrains-mono)', 'JetBrains Mono', 'monospace'],
+        sans: ["var(--font-sans)"],
+        mono: ["var(--font-mono)"],
+        serif: ["var(--font-serif)"],
+        heading: ["var(--font-heading)"],
+        body: ["var(--font-body)"],
       },
     },
   },
